@@ -1,0 +1,28 @@
+syntax = "proto3";
+
+option java_package = "com.example.card";
+option java_multiple_files = true;
+
+package com.example.card;
+
+service CardService{
+  rpc findById(RequestId) returns (CardResponse);
+  rpc findAllByIdUser(RequestId) returns(CardResponseList);
+}
+
+message RequestId {
+  int64 id = 1;
+}
+
+message CardResponse{
+  int64 id = 1;
+  string name = 2;
+  string number = 3;
+  string cvv = 4;
+  string expiration = 5;
+  string typeCard = 6;
+}
+
+message CardResponseList{
+  repeated CardResponse cards = 1;
+}

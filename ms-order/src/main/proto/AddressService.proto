@@ -1,0 +1,29 @@
+syntax = "proto3";
+
+option java_package = "com.example.address";
+option java_multiple_files = true;
+
+package com.example.address;
+
+service AddressService{
+  rpc findById(RequestId) returns (AddressResponse);
+  rpc findAllByIdUser(RequestId) returns(AddressResponseList);
+}
+
+message RequestId {
+  int64 id = 1;
+}
+
+message AddressResponse {
+  int64 id = 1;
+  string street = 2;
+  string neighborhood = 3;
+  string city = 4;
+  string state = 5;
+  string cep = 6;
+}
+
+message AddressResponseList{
+  repeated AddressResponse addresses = 1;
+}
+

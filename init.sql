@@ -1,0 +1,3 @@
+CREATE DATABASE order_db;
+CREATE DATABASE user_db;
+CREATE DATABASE store_db;

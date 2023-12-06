@@ -1,0 +1,32 @@
+syntax = "proto3";
+
+option java_package = "com.example.food";
+option java_multiple_files = true;
+
+package com.example.food;
+
+service FoodService{
+  rpc findById(RequestId) returns(FoodResponse);
+}
+
+message RequestId{
+  int64 id = 1;
+}
+
+message CategoryResponse{
+  string name = 1;
+}
+
+message StoreResponse{
+  int64 id = 1;
+  string name = 2;
+}
+
+message FoodResponse{
+  int64 id = 1;
+  string name = 2;
+  double price= 3;
+  int32 quantityStock = 4;
+  CategoryResponse category = 5;
+  StoreResponse store = 6;
+}

@@ -1,0 +1,36 @@
+syntax = "proto3";
+
+option java_package = "com.example.user";
+option java_multiple_files = true;
+
+package com.example.user;
+
+service UserService{
+  rpc findByEmail(RequestEmail) returns(UserResponse);
+}
+
+
+message RoleResponseList{
+  repeated RoleResponse roles = 1;
+}
+
+message RoleResponse{
+  int64 id = 1;
+  string roleName = 2;
+}
+
+message UserResponse {
+  int64 id = 1;
+  string email = 2;
+  string contactNumber = 3;
+  string cpf = 4;
+  string password = 5;
+  string name = 6;
+  RoleResponseList roles = 8;
+}
+
+
+message RequestEmail {
+  string email = 1;
+}
+

@@ -1,0 +1,109 @@
+version: '3.8'
+services:
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    restart: always
+    ports:
+      - 5672:5672
+      - 15672:15672
+    volumes:
+      - ./dados:/var/lib/rabbitmq/
+    environment:
+      - RABBITMQ_DEFAULT_USER=admin
+      - RABBITMQ_DEFAULT_PASS=123456 
+  
+  postgres:
+    image: postgres:latest
+    container_name: postgres
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: 123456
+      POSTGRES_USER: postgres
+    ports:
+      - 5432:5432
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+
+  
+  adminer:
+    image: adminer
+    container_name: adminer
+    restart: always
+    ports:
+      - 8083:8080 
+    depends_on:
+      - postgres
+  
+  ms-store:
+    container_name: ms-store
+    build: ./ms-store
+    environment:
+      - PORT=8282
+      - GRPC_PORT=9292
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_NAME=store_db
+      - DB_USERNAME=postgres
+      - DB_PASSWORD=123456
+      - JWT_SECRET=DKFJHADJKFHDAKJFH03912487429057245
+      - RABBIT_HOST=rabbitmq
+      - RABBIT_PORT=5672
+      - RABBIT_USERNAME=admin
+      - RABBIT_PASSWORD=123456
+    ports:
+      - 8282:8282
+      - 9292:9292
+    depends_on:
+      - rabbitmq  
+      - postgres
+  
+  ms-user:
+    container_name: ms-user
+    build: ./ms-user
+    environment:
+      - PORT=8080
+      - GRPC_PORT=9090
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_USERNAME=postgres
+      - DB_PASSWORD=123456
+      - DB_NAME=user_db
+      - JWT_SECRET=DKFJHADJKFHDAKJFH03912487429057245
+      - JWT_ACCESS_EXPIRATION=600000
+      - JWT_REFRESH_EXPIRATION=1800000
+      - RABBIT_HOST=rabbitmq
+      - RABBIT_PORT=5672
+      - RABBIT_USERNAME=admin
+      - RABBIT_PASSWORD=123456
+    ports:
+      - 8080:8080
+      - 9090:9090
+    depends_on:
+      - postgres
+      - rabbitmq
+      - ms-store
+  
+  ms-order:
+    container_name: ms-order
+    build: ./ms-order
+    environment:
+      - PORT=8484
+      - GRPC_PORT=9494
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_USERNAME=postgres
+      - DB_PASSWORD=123456
+      - DB_NAME=order_db
+      - JWT_SECRET=DKFJHADJKFHDAKJFH03912487429057245
+      - RABBIT_HOST=rabbitmq
+      - RABBIT_PORT=5672
+      - RABBIT_USERNAME=admin
+      - RABBIT_PASSWORD=123456
+    ports:
+      - 8484:8484
+      - 9494:9494
+    depends_on:
+      - postgres
+
+  

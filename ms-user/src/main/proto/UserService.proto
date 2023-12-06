@@ -1,0 +1,57 @@
+syntax = "proto3";
+
+option java_package = "com.example.user";
+option java_multiple_files = true;
+
+package com.example.user;
+
+service UserService{
+  rpc createOwner(OwnerRequest) returns(OwnerIdResponse);
+  rpc findById(RequestId) returns (UserResponse);
+  rpc findByEmail(RequestEmail) returns(UserResponse);
+}
+
+message OwnerIdResponse{
+  int64 id = 1;
+}
+
+message OwnerRequest{
+  string name = 1;
+  string email = 2;
+  string cpf = 3;
+  string contactNumber = 4;
+  string password = 5;
+}
+
+message RoleResponseList{
+  repeated RoleResponse roles = 1;
+}
+
+message RoleResponse{
+  int64 id = 1;
+  string roleName = 2;
+}
+
+message UserResponse {
+  int64 id = 1;
+  string email = 2;
+  string contactNumber = 3;
+  string cpf = 4;
+  string password = 5;
+  string name = 6;
+  RoleResponseList roles = 8;
+}
+
+message RequestId {
+  int64 id = 1;
+}
+
+message EmptyResponse{}
+
+message RequestEmail {
+  string email = 1;
+}
+
+message RequestName {
+  string name = 1;
+}
